@@ -28,4 +28,4 @@ jobs:
           context: .
           file: Patient_Service/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/loginapi:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/patientk:latest
