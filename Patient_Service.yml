@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patient-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: patient-api
+  template:
+    metadata:
+      labels:
+        app: patient-api
+    spec:
+      containers:
+        - name: patient-api
+          image: dhanush121/patientk:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: patient-api-service
+spec:
+  type: ClusterIP
+  selector:
+    app: patient-api
+  ports:
+    - port: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: patient-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /api/Patient/Register_Patient
+        pathType: Prefix
+        backend:
+          service:
+            name: patient-api-service
+            port:
+              number: 80
+              
+      - path: /api/Patient/SignIn_Patient
+        pathType: Prefix
+        backend:
+          service:
+            name: patient-api-service
+            port:
+              number: 80
+              
+      - path: /api/Patient/GetAllPatients
+        pathType: Prefix
+        backend:
+          service:
+            name: patient-api-service
+            port:
+              number: 80
+
+      - path: /api/Patient/GetAllPatientsById
+        pathType: Prefix
+        backend:
+          service:
+            name: patient-api-service
+            port:
+              number: 80
+      
+      - path: /api/Patient/Update_Patient
+        pathType: Prefix
+        backend:
+          service:
+            name: patient-api-service
+            port:
+              number: 80
+      - path: /api/HealthHistory/GetHistory
+        pathType: Prefix
+        backend:
+          service:
+            name: patient-api-service
+            port:
+              number: 80
+      - path: /api/Prescriptions/Get_Prescription
+        pathType: Prefix
+        backend:
+          service:
+            name: patient-api-service
+            port:
+              number: 80
+      - path: /api/HealthHistory/HealthHistory_Add
+        pathType: Prefix
+        backend:
+          service:
+            name: patient-api-service
+            port:
+              number: 80
+      - path: /api/Prescriptions/Prescription_Add
+        pathType: Prefix
+        backend:
+          service:
+            name: patient-api-service
+            port:
+              number: 80
+      - path: /api/Patient/GetPatientsByEmail
+        pathType: Prefix
+        backend:
+          service:
+            name: patient-api-service
+            port:
+              number: 80
